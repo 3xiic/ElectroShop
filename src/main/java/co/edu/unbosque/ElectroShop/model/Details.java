@@ -19,8 +19,6 @@ public class Details {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long details_id;
-	private Long order_id;
-	private Long product_id;
 	private int amount;
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -36,11 +34,9 @@ public class Details {
 		
 	}
 	
-	public Details(Long details_id, Long order_id, Long product_id, int amount) {
+	public Details(Long details_id, int amount) {
 		super();
 		this.details_id = details_id;
-		this.order_id = order_id;
-		this.product_id = product_id;
 		this.amount = amount;
 	}
 
@@ -50,18 +46,6 @@ public class Details {
 	}
 	public void setDetails_id(Long details_id) {
 		this.details_id = details_id;
-	}
-	public Long getOrder_id() {
-		return order_id;
-	}
-	public void setOrder_id(Long order_id) {
-		this.order_id = order_id;
-	}
-	public Long getProduct_id() {
-		return product_id;
-	}
-	public void setProduct_id(Long product_id) {
-		this.product_id = product_id;
 	}
 	public int getAmount() {
 		return amount;

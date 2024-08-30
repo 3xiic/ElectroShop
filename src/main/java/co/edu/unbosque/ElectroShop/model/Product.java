@@ -26,9 +26,8 @@ public class Product {
 	private String product_name;
 	private int price;
 	private int stock;
-	private String category_id;
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "products", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<Details> details;
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -40,13 +39,12 @@ public class Product {
 		
 	}
 
-	public Product(Long product_id, String product_name, int price, int stock, String category_id) {
+	public Product(Long product_id, String product_name, int price, int stock) {
 		super();
 		this.product_id = product_id;
 		this.product_name = product_name;
 		this.price = price;
 		this.stock = stock;
-		this.category_id = category_id;
 	}
 
 	public Long getProduct_id() {
@@ -81,13 +79,6 @@ public class Product {
 		this.stock = stock;
 	}
 
-	public String getCategory_id() {
-		return category_id;
-	}
-
-	public void setCategory_id(String category_id) {
-		this.category_id = category_id;
-	}
 	
 	
 	

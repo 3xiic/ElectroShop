@@ -26,7 +26,6 @@ public class Order {
 	private Long order_id;
 	private int total_pay;
 	private Date fecha;
-	private Long client_id;
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "client_id", referencedColumnName = "client_id")
@@ -39,10 +38,9 @@ public class Order {
 		
 	}
 
-	public Order(Long order_id, Long client_id, int total_pay, Date fecha) {
+	public Order(Long order_id, int total_pay, Date fecha) {
 		super();
 		this.order_id = order_id;
-		this.client_id = client_id;
 		this.total_pay = total_pay;
 		this.fecha = fecha;
 	}
@@ -55,13 +53,6 @@ public class Order {
 		this.order_id = order_id;
 	}
 
-	public Long getClient_id() {
-		return client_id;
-	}
-
-	public void setClient_id(Long client_id) {
-		this.client_id = client_id;
-	}
 
 	public int getTotal_pay() {
 		return total_pay;
