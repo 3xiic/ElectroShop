@@ -29,14 +29,13 @@ public class Category {
 	
 	
 	
-	
+
 	public Category() {
-		
+
 	}
 	
-	public Category(Long category_id, String category_name, String category_description) {
+	public Category(String category_name, String category_description) {
 		super();
-		this.category_id = category_id;
 		this.category_name = category_name;
 		this.category_description = category_description;
 	}
