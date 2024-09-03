@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.ElectroShop.repository.OrderRepository;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -93,5 +95,19 @@ public class OrderService {
 			return false;
 		}
 		return true;
+    }
+
+    /**
+     * Retrieves all orders from the database.
+     *
+     * @return  a list of all orders in the database
+     */
+    public List<Order> getAllOrders() {
+		Iterable<Order> orders = orderRepository.findAll();
+		List<Order> orderList = new ArrayList<>();
+        for (Order order : orders) {
+            orderList.add(order);
+        }
+		return orderList;
     }
 }

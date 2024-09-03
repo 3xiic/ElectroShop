@@ -5,6 +5,7 @@ import co.edu.unbosque.ElectroShop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,4 +95,17 @@ public class ProductService {
         return true;
     }
 
+    /**
+     * Retrieves all products from the product repository.
+     *
+     * @return a list of all products in the database
+     */
+    public List<Product> getAllProducts() {
+        Iterable<Product> products = productRepository.findAll();
+        List<Product> productList = new ArrayList<>();
+        for (Product product : products) {
+            productList.add(product);
+        }
+        return productList;
+    }
 }
