@@ -32,7 +32,7 @@ public class Order {
 	private Client client;
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
-	private Set<Details> details;
+	private Set<Detail> details;
 	
 	public Order() {
 		

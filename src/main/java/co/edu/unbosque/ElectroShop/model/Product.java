@@ -28,7 +28,7 @@ public class Product {
 	private int stock;
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-	private Set<Details> details;
+	private Set<Detail> details;
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
