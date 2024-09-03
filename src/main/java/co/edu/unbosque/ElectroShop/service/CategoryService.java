@@ -1,6 +1,8 @@
 package co.edu.unbosque.ElectroShop.service;
 
 import co.edu.unbosque.ElectroShop.model.Category;
+import co.edu.unbosque.ElectroShop.model.CategoryDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +26,9 @@ public class CategoryService {
 	 * @param  category  the category to be saved
 	 * @return          true if the category is saved successfully, false otherwise
 	 */
-	public boolean saveCategory(Category category) {
+	public boolean saveCategory(CategoryDTO categoryDTO) {
 		try {
-			categoryRepository.save(category);
+			categoryRepository.save(DataMapper.categoryDTOToCategory(categoryDTO));
 		}
 		catch (Exception e) {
 			return false;
