@@ -1,6 +1,7 @@
 package co.edu.unbosque.ElectroShop.service;
 
 import co.edu.unbosque.ElectroShop.model.Product;
+import co.edu.unbosque.ElectroShop.model.ProductDTO;
 import co.edu.unbosque.ElectroShop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,9 @@ public class ProductService {
      * @param  product  the product to be saved
      * @return           true if the product is saved successfully, false otherwise
      */
-    public boolean saveProduct(Product product) {
+    public boolean saveProduct(ProductDTO productDTO) {
         try {
-            productRepository.save(product);
+            productRepository.save(DataMapper.productDTOToProduct(productDTO));
         }
         catch (Exception e) {
             return false;
@@ -40,44 +41,14 @@ public class ProductService {
      * @param  id  the ID of the product to be retrieved
      * @return     the product with the specified ID, or null if not found
      */
-    public Product getProduct(long id) {
+    public ProductDTO getProduct(long id) {
         if (productRepository.findById(id).isPresent()) {
-            return productRepository.findById(id).get();
+            return DataMapper.productToProductDTO(productRepository.findById(id).get());
         }
         return null;
     }
 
-    /**
-     * Deletes a product from the product repository by its ID.
-     *
-     * @param  id  the ID of the product to be deleted
-     * @return     true if the product is deleted successfully, false otherwise
-     */
-    public boolean deleteProduct(long id) {
-        try {
-            productRepository.deleteById(id);
-        }
-        catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
 
-    /**
-     * Updates a product in the product repository.
-     *
-     * @param  product  the product to be updated
-     * @return          true if the product is updated successfully, false otherwise
-     */
-    public boolean updateProduct(Product product) {
-        try {
-            productRepository.save(product);
-        }
-        catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Saves multiple products to the product repository.
@@ -85,9 +56,11 @@ public class ProductService {
      * @param  products  the list of products to be saved
      * @return          true if all products are saved successfully, false otherwise
      */
-    public boolean saveAll(List<Product> products) {
+    public boolean saveAll(List<ProductDTO> products) {
         try {
-            productRepository.saveAll(products);
+            for (ProductDTO productDTO : products) {
+				productRepository.save(DataMapper.productDTOToProduct(productDTO));
+			}
         }
         catch (Exception e) {
             return false;
@@ -100,12 +73,12 @@ public class ProductService {
      *
      * @return a list of all products in the database
      */
-    public List<Product> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         Iterable<Product> products = productRepository.findAll();
-        List<Product> productList = new ArrayList<>();
+        List<ProductDTO> productDTOList = new ArrayList<>();
         for (Product product : products) {
-            productList.add(product);
+            productDTOList.add(DataMapper.productToProductDTO(product));
         }
-        return productList;
+        return productDTOList;
     }
 }

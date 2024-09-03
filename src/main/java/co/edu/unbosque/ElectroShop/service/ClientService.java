@@ -1,11 +1,14 @@
 package co.edu.unbosque.ElectroShop.service;
 
 import co.edu.unbosque.ElectroShop.model.Client;
+import co.edu.unbosque.ElectroShop.model.ClientDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.ElectroShop.repository.ClientRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,9 +27,9 @@ public class ClientService {
 	 * @param  client  the client to be saved
 	 * @return        true if the client was saved successfully, false otherwise
 	 */
-	public boolean saveClient(Client client) {
+	public boolean saveClient(ClientDTO client) {
 		try {
-			clientRepository.save(client);
+			clientRepository.save(DataMapper.clientDTOToClient(client));
 		}
 		catch (Exception e) {
 			return false;
@@ -40,44 +43,13 @@ public class ClientService {
 	 * @param  id  the ID of the Client object to be retrieved
 	 * @return     the Client object if found, null otherwise
 	 */
-	public Client getClient(long id) {
+	public ClientDTO getClient(long id) {
 		if (clientRepository.findById(id).isPresent()) {
-			return clientRepository.findById(id).get();
+			return DataMapper.clientToClientDTO(clientRepository.findById(id).get());
 		}
 		return null;
 	}
 
-	/**
-	 * Deletes a client from the database by its ID.
-	 *
-	 * @param  id  the ID of the client to be deleted
-	 * @return     true if the client was deleted successfully, false otherwise
-	 */
-	public boolean deleteClient(long id) {
-		try {
-			clientRepository.deleteById(id);
-		}
-		catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Updates a client in the database.
-	 *
-	 * @param  client  the client to be updated
-	 * @return        true if the client was updated successfully, false otherwise
-	 */
-	public boolean updateClient(Client client) {
-		try {
-			clientRepository.save(client);
-		}
-		catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
 
 	/**
 	 * Saves multiple clients to the database.
@@ -85,14 +57,25 @@ public class ClientService {
 	 * @param  clients  the list of clients to be saved
 	 * @return          true if all clients were saved successfully, false otherwise
 	 */
-	public boolean saveAll(List<Client> clients) {
+	public boolean saveAll(List<ClientDTO> clients) {
 		try {
-			clientRepository.saveAll(clients);
+			for (ClientDTO clientDTO : clients) {
+				clientRepository.save(DataMapper.clientDTOToClient(clientDTO));
+			}
 		}
 		catch (Exception e) {
 			return false;
 		}
 		return true;
+	}
+	
+	public List<ClientDTO> getAllClients(){
+		Iterable<Client> clients = clientRepository.findAll();
+		List<ClientDTO> clientDTOs = new ArrayList<>();
+		for (Client client : clients) {
+			clientDTOs.add(DataMapper.clientToClientDTO(client));
+		}
+		return clientDTOs;
 	}
 
 }

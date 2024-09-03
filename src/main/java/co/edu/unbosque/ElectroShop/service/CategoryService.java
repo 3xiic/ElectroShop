@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.ElectroShop.repository.CategoryRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,44 +43,13 @@ public class CategoryService {
 	 * @param  id  the ID of the category to be retrieved
 	 * @return     the category with the specified ID, or null if not found
 	 */
-	public Category getCategory(long id) {
+	public CategoryDTO getCategory(long id) {
 		if (categoryRepository.findById(id).isPresent()) {
-			return categoryRepository.findById(id).get();
+			return DataMapper.categoryToCategoryDTO(categoryRepository.findById(id).get());
 		}
 		return null;
 	}
 
-	/**
-	 * Deletes a category from the database by its ID.
-	 *
-	 * @param  id  the ID of the category to be deleted
-	 * @return     true if the category is deleted successfully, false otherwise
-	 */
-	public boolean deleteCategory(long id) {
-		try {
-			categoryRepository.deleteById(id);
-		}
-		catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Updates a category in the database.
-	 *
-	 * @param  category  the category to be updated
-	 * @return          true if the category is updated successfully, false otherwise
-	 */
-	public boolean updateCategory(Category category) {
-		try {
-			categoryRepository.save(category);
-		}
-		catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
 
 	/**
 	 * Saves multiple categories to the database.
@@ -87,13 +57,24 @@ public class CategoryService {
 	 * @param  categories  the list of categories to be saved
 	 * @return          true if all categories are saved successfully, false otherwise
 	 */
-	public boolean saveAll(List<Category> categories) {
+	public boolean saveAll(List<CategoryDTO> categories) {
 		try {
-			categoryRepository.saveAll(categories);
+			for (CategoryDTO categoryDTO : categories) {
+				categoryRepository.save(DataMapper.categoryDTOToCategory(categoryDTO));
+			}
 		}
 		catch (Exception e) {
 			return false;
 		}
 		return true;
+	}
+	
+	public List<CategoryDTO> getAllCategories(){
+		Iterable<Category> categories = categoryRepository.findAll();
+		List<CategoryDTO> categoryDTOs = new ArrayList<CategoryDTO>();
+		for (Category category : categories) {
+			categoryDTOs.add(DataMapper.categoryToCategoryDTO(category));
+		}
+		return categoryDTOs;
 	}
 }
