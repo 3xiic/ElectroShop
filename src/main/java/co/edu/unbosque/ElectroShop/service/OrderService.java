@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.ElectroShop.repository.OrderRepository;
 
+import java.util.List;
+
 @Service
 public class OrderService {
 
@@ -76,4 +78,20 @@ public class OrderService {
 		}
 		return true;
 	}
+
+    /**
+     * Saves multiple orders to the database.
+     *
+     * @param  orders  the list of orders to be saved
+     * @return        true if all orders were saved successfully, false otherwise
+     */
+    public boolean saveAll(List<Order> orders) {
+		try {
+			orderRepository.saveAll(orders);
+		}
+		catch (Exception e) {
+			return false;
+		}
+		return true;
+    }
 }

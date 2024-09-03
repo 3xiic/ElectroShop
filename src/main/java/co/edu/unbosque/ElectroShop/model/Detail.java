@@ -10,10 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="details")
-
+@Getter
+@Setter
 public class Detail {
 
 	@Id
@@ -34,26 +37,11 @@ public class Detail {
 		
 	}
 	
-	public Detail(Long details_id, int amount) {
+	public Detail( int amount) {
 		super();
-		this.details_id = details_id;
 		this.amount = amount;
 	}
 
-
-	public Long getDetails_id() {
-		return details_id;
-	}
-	public void setDetails_id(Long details_id) {
-		this.details_id = details_id;
-	}
-	public int getAmount() {
-		return amount;
-	}
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-	
 	
 	
 }

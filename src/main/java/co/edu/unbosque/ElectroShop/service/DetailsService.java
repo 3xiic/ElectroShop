@@ -1,8 +1,7 @@
 package co.edu.unbosque.ElectroShop.service;
 
-import co.edu.unbosque.ElectroShop.model.Details;
+import co.edu.unbosque.ElectroShop.model.Detail;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.ElectroShop.repository.DetailsRepository;
@@ -24,7 +23,7 @@ public class DetailsService {
 	 * @param  details  the details object to be saved
 	 * @return          true if the details were saved successfully, false otherwise
 	 */
-	public boolean saveDetails(Details details) {
+	public boolean saveDetails(Detail details) {
 		try {
 			detailsRepository.save(details);
 		}
@@ -40,7 +39,7 @@ public class DetailsService {
 	 * @param  id  the ID of the Details object to be retrieved
 	 * @return     the Details object if found, null otherwise
 	 */
-	public Details getDetails(long id) {
+	public Detail getDetails(long id) {
 		if (detailsRepository.findById(id).isPresent()) {
 			return detailsRepository.findById(id).get();
 		}
@@ -69,7 +68,7 @@ public class DetailsService {
 	 * @param  details  the details object to be updated
 	 * @return          true if the details were updated successfully, false otherwise
 	 */
-	public boolean updateDetails(Details details) {
+	public boolean updateDetails(Detail details) {
 		try {
 			detailsRepository.save(details);
 		}
@@ -85,7 +84,7 @@ public class DetailsService {
 	 * @param  details  the list of details objects to be saved
 	 * @return          true if the details were saved successfully, false otherwise
 	 */
-	public boolean saveAll(List<Details> details) {
+	public boolean saveAll(List<Detail> details) {
 		try {
 			detailsRepository.saveAll(details);
 		}

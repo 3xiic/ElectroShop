@@ -12,10 +12,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="Categorys")
-
+@Getter @Setter
 public class Category {
 
 	@Id
@@ -26,38 +28,15 @@ public class Category {
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL)
 	private Set<Product> products;
-	
-	
-	
 
 	public Category() {
 
 	}
-	
+
 	public Category(String category_name, String category_description) {
 		super();
 		this.category_name = category_name;
 		this.category_description = category_description;
 	}
-	
-	public Long getCategory_id() {
-		return category_id;
-	}
-	public void setCategory_id(Long category_id) {
-		this.category_id = category_id;
-	}
-	public String getCategory_name() {
-		return category_name;
-	}
-	public void setCategory_name(String category_name) {
-		this.category_name = category_name;
-	}
-	public String getCategory_description() {
-		return category_description;
-	}
-	public void setCategory_description(String category_description) {
-		this.category_description = category_description;
-	}
-	
-	
+
 }

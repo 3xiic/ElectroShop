@@ -15,16 +15,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Products")
+@Getter
+@Setter
 public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long product_id; 
 	private String product_name;
-	private int price;
+	private double price;
 	private int stock;
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
@@ -33,54 +37,17 @@ public class Product {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
 	private Category category;
-	
-	
+
 	public Product() {
 		
 	}
 
-	public Product(Long product_id, String product_name, int price, int stock) {
+	public Product( String product_name, double price, int stock) {
 		super();
-		this.product_id = product_id;
 		this.product_name = product_name;
 		this.price = price;
 		this.stock = stock;
 	}
 
-	public Long getProduct_id() {
-		return product_id;
-	}
 
-	public void setProduct_id(Long product_id) {
-		this.product_id = product_id;
-	}
-
-	public String getProduct_name() {
-		return product_name;
-	}
-
-	public void setProduct_name(String product_name) {
-		this.product_name = product_name;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public int getStock() {
-		return stock;
-	}
-
-	public void setStock(int stock) {
-		this.stock = stock;
-	}
-
-	
-	
-	
-	
 }
