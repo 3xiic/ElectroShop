@@ -54,7 +54,7 @@ public class OrderController {
             @Parameter(description = "Id del detalle que se esta ordenando")
             @RequestParam long id_detail,
             @Parameter(description = "Numero de la tarjeta de credito para realizar el pago")
-            @RequestParam int card_number,
+            @RequestParam String card_number,
             @Parameter(description = "Monto total de la orden")
             @RequestParam int mount) {
         DetailDTO detail = detailService.getDetails(id_detail);

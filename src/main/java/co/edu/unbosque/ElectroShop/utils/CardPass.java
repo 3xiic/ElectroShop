@@ -15,7 +15,7 @@ public class CardPass {
      * @param card_number the credit card number to be verified
      * @return <code>true</code> if the card number is valid, <code>false</code> otherwise
      */
-    public static boolean isValidCard(int card_number) {
+    public static boolean isValidCard(String card_number) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url + card_number)
