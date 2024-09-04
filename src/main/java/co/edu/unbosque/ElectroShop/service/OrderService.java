@@ -25,7 +25,7 @@ public class OrderService {
 	/**
 	 * Saves an order to the database.
 	 *
-	 * @param  order  the order to be saved
+	 * @param  orderDTO  the order to be saved
 	 * @return       true if the order is saved successfully, false otherwise
 	 */
 	public boolean saveOrder(OrderDTO orderDTO) {

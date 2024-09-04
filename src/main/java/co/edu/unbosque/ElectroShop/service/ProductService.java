@@ -22,7 +22,7 @@ public class ProductService {
     /**
      * Saves a product to the product repository.
      *
-     * @param  product  the product to be saved
+     * @param  productDTO  the product to be saved
      * @return           true if the product is saved successfully, false otherwise
      */
     public boolean saveProduct(ProductDTO productDTO) {

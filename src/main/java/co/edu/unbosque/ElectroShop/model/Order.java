@@ -29,6 +29,7 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long order_id;
 	private int total_pay;
+	private boolean paid;
 	private LocalDate fecha;
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,82 +43,12 @@ public class Order {
 
 	}
 
-	public Order(int total_pay, LocalDate fecha) {
+	public Order(int total_pay, LocalDate fecha, boolean paid) {
 		super();
 		this.total_pay = total_pay;
 		this.fecha = fecha;
+		this.paid = paid;
 	}
 
-	/**
-	 * @return the order_id
-	 */
-	public Long getOrder_id() {
-		return order_id;
-	}
-
-	/**
-	 * @param order_id the order_id to set
-	 */
-	public void setOrder_id(Long order_id) {
-		this.order_id = order_id;
-	}
-
-	/**
-	 * @return the total_pay
-	 */
-	public int getTotal_pay() {
-		return total_pay;
-	}
-
-	/**
-	 * @param total_pay the total_pay to set
-	 */
-	public void setTotal_pay(int total_pay) {
-		this.total_pay = total_pay;
-	}
-
-	/**
-	 * @return the fecha
-	 */
-	public LocalDate getFecha() {
-		return fecha;
-	}
-
-	/**
-	 * @param fecha the fecha to set
-	 */
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
-
-	/**
-	 * @return the client
-	 */
-	public Client getClient() {
-		return client;
-	}
-
-	/**
-	 * @param client the client to set
-	 */
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
-	/**
-	 * @return the details
-	 */
-	public Set<Detail> getDetails() {
-		return details;
-	}
-
-	/**
-	 * @param details the details to set
-	 */
-	public void setDetails(Set<Detail> details) {
-		this.details = details;
-	}
-	
-	
 	
 }

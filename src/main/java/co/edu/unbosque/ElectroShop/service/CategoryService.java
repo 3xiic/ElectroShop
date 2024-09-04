@@ -24,7 +24,7 @@ public class CategoryService {
 	/**
 	 * Saves a category to the database.
 	 *
-	 * @param  category  the category to be saved
+	 * @param  categoryDTO  the category to be saved
 	 * @return          true if the category is saved successfully, false otherwise
 	 */
 	public boolean saveCategory(CategoryDTO categoryDTO) {

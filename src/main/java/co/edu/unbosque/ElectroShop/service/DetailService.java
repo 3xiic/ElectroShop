@@ -3,6 +3,8 @@ package co.edu.unbosque.ElectroShop.service;
 import co.edu.unbosque.ElectroShop.model.Detail;
 import co.edu.unbosque.ElectroShop.model.DetailDTO;
 
+import co.edu.unbosque.ElectroShop.model.OrderDTO;
+import co.edu.unbosque.ElectroShop.model.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class DetailService {
 	/**
 	 * Saves the provided details to the database.
 	 *
-	 * @param  details  the details object to be saved
+	 * @param  detailDTO  the details object to be saved
 	 * @return          true if the details were saved successfully, false otherwise
 	 */
 	public boolean saveDetails(DetailDTO detailDTO) {
@@ -49,6 +51,7 @@ public class DetailService {
 		}
 		return null;
 	}
+
 
 
 	/**
@@ -76,4 +79,13 @@ public class DetailService {
 		}
 		return detailDTOs;
 	}
+
+    public ProductDTO getProducts(long idDetail) {
+		if (detailRepository.findById(idDetail).isPresent()) {
+			Detail detail = detailRepository.findById(idDetail).get();
+			return DataMapper.productToProductDTO(detail.getProduct());
+		}
+		return null;
+
+    }
 }

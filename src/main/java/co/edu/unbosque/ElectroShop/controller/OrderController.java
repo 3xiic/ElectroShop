@@ -1,8 +1,12 @@
 package co.edu.unbosque.ElectroShop.controller;
 
-import co.edu.unbosque.ElectroShop.model.Order;
+import co.edu.unbosque.ElectroShop.model.*;
+import co.edu.unbosque.ElectroShop.service.ClientService;
+import co.edu.unbosque.ElectroShop.service.DetailService;
 import co.edu.unbosque.ElectroShop.service.OrderService;
-import co.edu.unbosque.ElectroShop.util.FakerInstance;
+import co.edu.unbosque.ElectroShop.service.ProductService;
+import co.edu.unbosque.ElectroShop.utils.CardPass;
+import co.edu.unbosque.ElectroShop.utils.PaySimu;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,15 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.transaction.Transactional;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 @CrossOrigin(origins = "*")
 @Transactional
 
@@ -33,26 +30,56 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("api/orders/faker/{amount}")
-    @Operation(summary = "Create fake orders", description = "Generates a specified number of fake orders using Faker library and saves them to the database.")
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private DetailService detailService;
+
+    @Autowired
+    private ProductService productService;
+
+
+    @Operation(summary = "Procesa una orden de compra con una tarjeta de credito/debito")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Orders created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
+            @ApiResponse(responseCode = "200", description = "La orden se ha procesado correctamente",
+                    content = {@Content( schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "400", description = "La orden no se ha podido procesar",
+                    content = {@Content( schema = @Schema(implementation = String.class)) })
     })
-    public ResponseEntity<Object> createFakeOrders(
-            @Parameter(description = "The number of fake orders to generate") @PathVariable int amount) {
-        List<Order> orders = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            Order order = new Order(
-                    FakerInstance.getFakerEsp().number().numberBetween(0, 1000),
-                    FakerInstance.getFakerEsp().date().past(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()            );
-            orders.add(order);
-        }
-        if (orderService.saveAll(orders)) {
-            return new ResponseEntity<>(orders, HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+    @PostMapping("/process")
+    public ResponseEntity<Object> processOrder(
+            @Parameter(description = "Id del cliente que esta realizando la orden")
+            @RequestParam long id_client,
+            @Parameter(description = "Id del detalle que se esta ordenando")
+            @RequestParam long id_detail,
+            @Parameter(description = "Numero de la tarjeta de credito para realizar el pago")
+            @RequestParam int card_number,
+            @Parameter(description = "Monto total de la orden")
+            @RequestParam int mount) {
+        DetailDTO detail = detailService.getDetails(id_detail);
+        ClientDTO client = clientService.getClient(id_client);
+        if(client == null || detail == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque el cliente o el detalle no existen");
+        ProductDTO product = productService.getProduct(detail.getProduct().getProduct_id());
+        if (product.getStock() < detailService.getDetails(id_detail).getAmount())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido , porque el stock es insuficiente");
+        OrderDTO order = orderService.getOrder(detail.getOrder().getOrder_id());
+        if (order.isPaid())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque ya se ha procesado");
+        if(order.getTotal_pay() > mount)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque el monto es insuficiente");
+        if (!CardPass.isValidCard(card_number))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque la tarjeta no es valida");
+        PaySimu.simulatePayment();
+        product.setStock(product.getStock() - detailService.getDetails(id_detail).getAmount());
+        productService.saveProduct(product);
+        order.setPaid(true);
+        orderService.saveOrder(order);
+        return ResponseEntity.status(HttpStatus.OK).body("Orden Procesada");
     }
+
+
 
 	
 }

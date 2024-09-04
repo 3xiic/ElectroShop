@@ -51,6 +51,8 @@ public class ClientService {
 	}
 
 
+
+
 	/**
 	 * Saves multiple clients to the database.
 	 *
@@ -69,6 +71,11 @@ public class ClientService {
 		return true;
 	}
 	
+	/**
+	 * Retrieves all clients from the database.
+	 *
+	 * @return a list of all clients in the database
+	 */
 	public List<ClientDTO> getAllClients(){
 		Iterable<Client> clients = clientRepository.findAll();
 		List<ClientDTO> clientDTOs = new ArrayList<>();
