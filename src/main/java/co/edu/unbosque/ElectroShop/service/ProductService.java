@@ -4,6 +4,7 @@ import co.edu.unbosque.ElectroShop.model.Product;
 import co.edu.unbosque.ElectroShop.model.ProductDTO;
 import co.edu.unbosque.ElectroShop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class ProductService {
      * @param  id  the ID of the product to be retrieved
      * @return     the product with the specified ID, or null if not found
      */
+    @Cacheable(value = "productCache", key = "#id")
     public ProductDTO getProduct(long id) {
         if (productRepository.findById(id).isPresent()) {
             return DataMapper.productToProductDTO(productRepository.findById(id).get());
@@ -80,5 +82,17 @@ public class ProductService {
             productDTOList.add(DataMapper.productToProductDTO(product));
         }
         return productDTOList;
+    }
+
+    /**
+     * Updates the stock of a product by the given amount.
+     *
+     * @param product the product to be updated
+     * @param amount the amount to be subtracted from the product's stock
+     */
+    public void updateStock(ProductDTO product, int amount) {
+        product.setStock(product.getStock() - amount);
+        productRepository.save(DataMapper.productDTOToProduct(product));
+
     }
 }

@@ -56,30 +56,43 @@ public class OrderController {
             @Parameter(description = "Numero de la tarjeta de credito para realizar el pago")
             @RequestParam String card_number,
             @Parameter(description = "Monto total de la orden")
-            @RequestParam int mount) {
+            @RequestParam int amount) {
+
         DetailDTO detail = detailService.getDetails(id_detail);
         ClientDTO client = clientService.getClient(id_client);
-        if(client == null || detail == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque el cliente o el detalle no existen");
+        if (client == null || detail == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Cliente o detalle no existen");
+        }
         ProductDTO product = productService.getProduct(detail.getProduct().getProduct_id());
-        if (product.getStock() < detailService.getDetails(id_detail).getAmount())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido , porque el stock es insuficiente");
+        int stock = product.getStock();
+        int orderAmount = detail.getAmount();
+        if (stock < orderAmount) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Stock insuficiente");
+        }
         OrderDTO order = orderService.getOrder(detail.getOrder().getOrder_id());
-        if (order.isPaid())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque ya se ha procesado");
-        if(order.getTotal_pay() > mount)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque el monto es insuficiente");
-        if (!CardPass.isValidCard(card_number))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La orden no se ha podido procesar, porque la tarjeta no es valida");
+        if (order.isPaid()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Orden ya procesada");
+        }
+        if (order.getTotal_pay() > amount) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Monto insuficiente");
+        }
+        if (!CardPass.isValidCard(card_number)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Tarjeta no válida");
+        }
         PaySimu.simulatePayment();
-        product.setStock(product.getStock() - detailService.getDetails(id_detail).getAmount());
-        productService.saveProduct(product);
-        order.setPaid(true);
-        orderService.saveOrder(order);
-        return ResponseEntity.status(HttpStatus.OK).body("Orden Procesada");
+        productService.updateStock(product, orderAmount);
+        orderService.paidOrder(order);
+        return ResponseEntity.status(HttpStatus.OK).body("Orden procesada exitosamente");
     }
 
 
 
-	
+
+
+
 }
