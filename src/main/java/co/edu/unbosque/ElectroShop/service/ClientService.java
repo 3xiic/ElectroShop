@@ -4,6 +4,7 @@ import co.edu.unbosque.ElectroShop.model.Client;
 import co.edu.unbosque.ElectroShop.model.ClientDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.ElectroShop.repository.ClientRepository;
@@ -43,6 +44,7 @@ public class ClientService {
 	 * @param  id  the ID of the Client object to be retrieved
 	 * @return     the Client object if found, null otherwise
 	 */
+	@Cacheable(value = "clientCache", key = "#id")
 	public ClientDTO getClient(long id) {
 		if (clientRepository.findById(id).isPresent()) {
 			return DataMapper.clientToClientDTO(clientRepository.findById(id).get());

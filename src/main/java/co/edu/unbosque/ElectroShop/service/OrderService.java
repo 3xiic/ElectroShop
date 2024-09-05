@@ -3,7 +3,9 @@ package co.edu.unbosque.ElectroShop.service;
 import co.edu.unbosque.ElectroShop.model.Order;
 import co.edu.unbosque.ElectroShop.model.OrderDTO;
 
+import co.edu.unbosque.ElectroShop.model.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.ElectroShop.repository.OrderRepository;
@@ -44,6 +46,7 @@ public class OrderService {
 	 * @param id the id of the Order to be retrieved
 	 * @return the Order object if found, otherwise null
 	 */
+	@Cacheable(value = "orderCache", key = "#id")
 	public OrderDTO getOrder(long id) {
 		if (orderRepository.findById(id).isPresent()) {
 			return DataMapper.orderToOrderDTO(orderRepository.findById(id).get());
@@ -82,4 +85,16 @@ public class OrderService {
         }
 		return orderDTOs;
     }
+
+
+
+    /**
+     * Marks an order as paid.
+     *
+     * @param order the order to be marked as paid
+     */
+	public void paidOrder(OrderDTO order) {
+		order.setPaid(true);
+		orderRepository.save(DataMapper.orderDTOToOrder(order));
+	}
 }

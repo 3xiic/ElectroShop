@@ -6,6 +6,7 @@ import co.edu.unbosque.ElectroShop.model.DetailDTO;
 import co.edu.unbosque.ElectroShop.model.OrderDTO;
 import co.edu.unbosque.ElectroShop.model.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ public class DetailService {
 	 * @param  id  the ID of the Details object to be retrieved
 	 * @return     the Details object if found, null otherwise
 	 */
+	@Cacheable(value = "detailCache", key = "#id")
 	public DetailDTO getDetails(long id) {
 		if (detailRepository.findById(id).isPresent()) {
 			return DataMapper.detailToDetailDTO(detailRepository.findById(id).get());
